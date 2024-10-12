@@ -51,4 +51,10 @@ plt.title('n = {} Order Taylor Expansion for the function \n{} Centered at {}'.f
 
 plt.grid()
 
-print('The function {} evaluated at x = {} for the {} Taylor Term: '.format(f,givenEstValue, n), taylorEq.subs(x,givenEstValue).evalf())
+print('The function {} evaluated at x = {} for the {} Taylor Term:'.format(f,givenEstValue, n), taylorEq.subs(x,givenEstValue).evalf())
+
+'''
+~~ Output ~~
+
+The function cos(x) evaluated at x = 5 for the 4 Taylor Term:  -15.8333333333333
+'''
