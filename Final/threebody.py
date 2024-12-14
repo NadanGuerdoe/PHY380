@@ -4,8 +4,8 @@ import numpy as np, matplotlib.pyplot as plt
 
 G = 6.674*10**(-11)
 MS = 1988400*10**(24)
-ME = MS#5.9722*10**(24)
-MJ = 1.89813*10**(27)
+ME = 5.9722*10**(24)
+MJ = 1.89813*10**(27)*100
 AU = 1.49598*10**11
 time_conversion = 365.25*24*3600 # years to seconds
 
@@ -40,7 +40,7 @@ vyCM0 = 0
 
 dt = 0.001*time_conversion # years
 t0 = 0
-tf = 0.01
+tf = 12
 
 t = np.arange(t0*time_conversion, tf*time_conversion, dt)
 
@@ -90,35 +90,47 @@ for i in range(len(t) - 1):
     
     
     rCM = np.sqrt(xCM[i]**2 + yCM[i]**2)
-    rE = np.sqrt((xE[i] + xCM[i])**2 + (yE[i]+xCM[i])**2)
-    rJ = np.sqrt((xJ[i] + xCM[i])**2 + (yJ[i]+xCM[i])**2)
-    rS = np.sqrt((xS[i] + xCM[i])**2 + (yS[i]+xCM[i])**2)
+    rE = np.sqrt((xE[i])**2 + (yE[i])**2)
+    rJ = np.sqrt((xJ[i])**2 + (yJ[i])**2)
+    rS = np.sqrt((xS[i])**2 + (yS[i])**2)
+    '''
+    rES = np.sqrt((xE[i] - xS[i] + xCM[i])**2 + (yE[i] - yS[i] + yCM[i])**2)
+    rSE = np.sqrt((xS[i] - xE[i] + xCM[i])**2 + (yS[i] - yE[i] + yCM[i])**2)
+    rEJ = np.sqrt((xE[i] - xJ[i] + xCM[i])**2 + (yE[i] - yJ[i] + yCM[i])**2)
+    rJE = np.sqrt((xJ[i] - xE[i] + xCM[i])**2 + (yJ[i] - yE[i] + yCM[i])**2)
+    rJS = np.sqrt((xJ[i] - xS[i] + xCM[i])**2 + (yJ[i] - yS[i] + yCM[i])**2)
+    rSJ = np.sqrt((xS[i] - xJ[i] + xCM[i])**2 + (yS[i] - yJ[i] + yCM[i])**2)
+    '''
     
-    rES = rE - rS
-    rSE = rS - rE
-    rEJ = rE - rJ
-    rJE = rJ - rE
-    rJS = rJ - rS
-    rSJ = rS - rJ
+    rES = np.sqrt((xE[i] - xS[i])**2 + (yE[i] - yS[i])**2)
+    rSE = np.sqrt((xS[i] - xE[i])**2 + (yS[i] - yE[i])**2)
+    rEJ = np.sqrt((xE[i] - xJ[i])**2 + (yE[i] - yJ[i])**2)
+    rJE = np.sqrt((xJ[i] - xE[i])**2 + (yJ[i] - yE[i])**2)
+    rJS = np.sqrt((xJ[i] - xS[i])**2 + (yJ[i] - yS[i])**2)
+    rSJ = np.sqrt((xS[i] - xJ[i])**2 + (yS[i] - yJ[i])**2)
     
     #rEJ = np.sqrt((xE[i] - xJ[i])**2 + (yE[i] - yJ[i])**2)
     #rES = np.sqrt((xE[i] - xS[i])**2 + (yE[i] - yS[i])**2)
     #rJS = np.sqrt((xJ[i] - xS[i])**2 + (yJ[i] - yS[i])**2)
     
+    
     #breakpoint()
     
     FgES = -G*MS*ME/(rES**3)*np.array([xE[i] - xS[i], yE[i] - yS[i]])
     FgSE = -G*MS*ME/(rSE**3)*np.array([xS[i] - xE[i], yS[i] - yE[i]])
-    FgEJ = -G*MJ*ME/(rEJ**3)*np.array([xE[i] - xJ[i], yE[i] - yJ[i]])
-    FgJE = -G*MJ*ME/(rJE**3)*np.array([xJ[i] - xS[i], yJ[i] - yE[i]])
+    FgEJ = -G*MJ*ME/(rEJ**3)*np.array([xJ[i] - xE[i], yE[i] - yJ[i]])
+    FgJE = -G*MJ*ME/(rJE**3)*np.array([xJ[i] - xE[i], yJ[i] - yE[i]])
     FgJS = -G*MS*MJ/(rJS**3)*np.array([xJ[i] - xS[i], yJ[i] - yS[i]])
     FgSJ = -G*MS*MJ/(rSJ**3)*np.array([xS[i] - xJ[i], yS[i] - yJ[i]])
     
-    aE = (FgSE - FgJE)/ME
-    aJ = (FgEJ + FgSJ)/MJ
-    aS = (FgES - FgJS)/MS
+    #print(FgES,FgEJ)
+    #breakpoint()
     
-    print(aS[1])
+    #print(FgSJ)
+    
+    aE = (-FgSE + FgJE)/ME
+    aJ = (FgEJ - FgSJ)/MJ
+    aS = (FgES - FgJS)/MS
     
     vxE[i+1] = vxE[i] + aE[0]*dt
     vyE[i+1] = vyE[i] + aE[1]*dt
@@ -138,7 +150,7 @@ for i in range(len(t) - 1):
     xCM[i+1] = (xS[i+1]*MS+xE[i+1]*ME+xJ[i+1]*MJ)/(MS+ME+MJ)
     yCM[i+1] = (yS[i+1]*MS+yE[i+1]*ME+yJ[i+1]*MJ)/(MS+ME+MJ)
     
-    
+#print(yS, yJ)
     
     
 #plt.plot(xE, yE)
